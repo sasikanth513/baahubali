@@ -38,6 +38,7 @@ const CheckBookMyShow = () => {
       subject: 'Unable to get tickets from bookmyshow',
       text: 'Unable to get tickets from bookmyshow'
     });
+    return true;
   }
 };
 
@@ -56,6 +57,14 @@ Meteor.methods({
   },
   callMethod() {
     return CheckBookMyShow();
+  },
+  testMail() {
+    Email.send({
+      to: 'sasi.kanth80@gmail.com',
+      from: 'no-reply@sasi.io',
+      subject: 'Checking BookMyShow website for tickets',
+      text: 'Checking BookMyShow website for tickets'
+    });
   },
 });
 
