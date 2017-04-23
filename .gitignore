@@ -1,5 +1,5 @@
 .DS_Store
 settings-production.json
 npm-debug.log
-
+mup.json
 node_modules
