@@ -2,4 +2,6 @@
 settings-production.json
 npm-debug.log
 mup.json
+galaxy.json
+mup.js
 node_modules

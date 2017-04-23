@@ -115,3 +115,5 @@ SyncedCron.add({
     return true;
   }
 });
+
+SyncedCron.start();
