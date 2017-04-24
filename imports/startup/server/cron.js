@@ -8,7 +8,10 @@ import cheerio from 'cheerio';
 const Future = require('fibers/future');
 
 let bookmyshowTheatresCount = 2;
+let bookmyshowErrorCount = 0;
+
 let ticket4uTheatresCount = 1;
+let ticket4uErrorCount = 0;
 
 const CheckBookMyShow = () => {
   const url = `https://in.bookmyshow.com/buytickets/baahubali-2-the-conclusion-bengaluru/movie-bang-ET00038693-MT/20170428`;
@@ -22,7 +25,7 @@ const CheckBookMyShow = () => {
     if (list && list.length > bookmyshowTheatresCount) {
       list = list.reverse();
 
-      const html = `Total theatres list:${list.join('<br>')}`
+      const html = `Total theatres list:<br><br>${list.join('<br>')}`
       Email.send({
         to: 'sasi.kanth80@gmail.com',
         from: 'no-reply@sasi.io',
@@ -30,15 +33,19 @@ const CheckBookMyShow = () => {
         html
       });
       bookmyshowTheatresCount = list.length;
+      bookmyshowErrorCount = 0;
     }
     return list;
   } else {
-    Email.send({
-      to: 'sasi.kanth80@gmail.com',
-      from: 'no-reply@sasi.io',
-      subject: 'Unable to get tickets from bookmyshow',
-      text: 'Unable to get tickets from bookmyshow'
-    });
+    bookmyshowErrorCount += 1;
+    if (bookmyshowErrorCount >= 3) {
+      Email.send({
+        to: 'sasi.kanth80@gmail.com',
+        from: 'no-reply@sasi.io',
+        subject: 'Unable to get tickets from bookmyshow',
+        text: 'Unable to get tickets from bookmyshow'
+      });
+    }
     return true;
   }
 };
@@ -63,15 +70,20 @@ const CheckTicket4u = () => {
         html
       });
       ticket4uTheatresCount = list.length;
+      ticket4uErrorCount = 0;
     }
     return list;
   } else {
-    Email.send({
-      to: 'sasi.kanth80@gmail.com',
-      from: 'no-reply@sasi.io',
-      subject: 'Unable to get tickets from ticket4u',
-      text: 'Unable to get tickets from ticket4u'
-    });
+    ticket4uErrorCount += 1;
+
+    if (ticket4uErrorCount >= 3) {
+      Email.send({
+        to: 'sasi.kanth80@gmail.com',
+        from: 'no-reply@sasi.io',
+        subject: 'Unable to get tickets from ticket4u',
+        text: 'Unable to get tickets from ticket4u'
+      });
+    }
     return true;
   }
 };
@@ -107,7 +119,7 @@ SyncedCron.add({
   name: 'Check For Baahubali Tickets',
   schedule: function(parser) {
     // parser is a later.parse object
-    return parser.text('every 5 minutes');
+    return parser.text('every 10 minutes');
   },
   job: function() {
     CheckBookMyShow();
