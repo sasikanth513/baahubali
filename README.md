@@ -1,5 +1,5 @@
 # The Meteor Chef - Base
-A starting point for Meteor apps.
+Package to book baahubali tickets
 
 <table>
   <tbody>
